@@ -1,20 +1,26 @@
 class Solution {
 public:
-    int func(vector<int>& arr, int start, int end, int i, int j, vector<vector<int>>&dp)
+    int func(vector<int>& arr, int st, int en, int arr_start, int arr_end, vector<vector<int>>&dp)
     {
-        if(i>j)return 0;
-        if(dp[i][j] != -1)return dp[i][j];
-        
+        if(arr_start > arr_end)return 0;
+
+        if(dp[arr_start][arr_end] != -1)return dp[arr_start][arr_end];
+
         int minimum = INT_MAX;
-        for(int idx = i; idx<=j; idx++){
-            minimum = min(minimum, (end-start) + func(arr, start, arr[idx], i, idx-1, dp) + func(arr, arr[idx], end, idx+1, j, dp));
+
+        for(int i = arr_start; i <= arr_end; i++)
+        {
+            minimum = min(minimum, (en-st) + func(arr, st, arr[i], arr_start, i-1, dp) + 
+                                             func(arr, arr[i], en, i+1, arr_end, dp));
         }
 
-        return dp[i][j] = minimum;
+        return dp[arr_start][arr_end] = minimum;
     }
-    int minCost(int n, vector<int>& arr) {
+    
+    int minCost(int n, vector<int>& arr) 
+    {
         int sz = arr.size();
-        //If all elements are easily sorted, then find the cuts from the start to the end.
+        //If all elements are easily sorted, then find the cuts from the st to the en.
         //Otherwise, if the vector is not sorted, traversing the entire vector becomes a time-consuming task, which is wasteful.
         sort(arr.begin(), arr.end());
         vector<vector<int>>dp(sz, vector<int>(sz, -1));
