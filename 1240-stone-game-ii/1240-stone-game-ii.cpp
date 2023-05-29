@@ -1,33 +1,32 @@
 class Solution {
 public:
-    int rec(vector<int> &piles, int idx, int M, int noOfPiles, int turn, vector<vector<vector<int> > > &dp){
-        if(idx >= noOfPiles) return 0;
-        if(dp[idx][M][turn] != -1){
-            return dp[idx][M][turn];
-        }
-        int alexGotStones;
+    int func(vector<int>& arr, int i, int n, int M, int turn, vector<vector<vector<int>>> &dp)
+    {
+        if(i>=n)return 0;
+        if(dp[i][M][turn] != -1)return dp[i][M][turn];
+        int ans = turn==1?0:INT_MAX;
+        
         if(turn){
-            alexGotStones = INT_MAX;
-            for(int i = 0; i < 2 * M; i++){
-                if(!(idx + i < noOfPiles)) break;
-                alexGotStones = min(alexGotStones, rec(piles, idx + i + 1, max(i + 1, M), noOfPiles, 0, dp));          
-            } 
-        }else{
-            alexGotStones = 0;
-            int tempSum = 0;
-            for(int i = 0; i < 2 * M; i++){
-                if(!(idx + i < noOfPiles)) break;
-                tempSum += piles[idx + i];
-                alexGotStones = max(alexGotStones, tempSum + rec(piles, idx + i + 1, max(i + 1, M), noOfPiles, 1, dp));          
+            int score=0;
+            for(int j=0; j<2*M; j++){
+                if(i+j>=n)break;
+                score += arr[i+j];
+                ans = max(ans, score + func(arr, i+j+1, n, max(M,j+1), !turn, dp)); //here we are taking i+j+1, dry run you'll understand 
             }
         }
-        dp[idx][M][turn] = alexGotStones;
-        return alexGotStones;
+        else{
+            for(int j=0; j<2*M; j++){
+                if(i+j>=n)break;
+                ans = min(ans, func(arr, i+j+1, n, max(M,j+1), !turn, dp));
+            }
+        }
+
+        return dp[i][M][turn] = ans;
     }
-    
-    int stoneGameII(vector<int>& piles) {
-        vector<vector<vector<int> > > dp(105, vector<vector<int> > (105, vector<int> (2, -1)));
-        int noOfPiles = piles.size();
-        return rec(piles, 0, 1, noOfPiles, 0, dp);
+
+    int stoneGameII(vector<int>& arr) {
+        int n = arr.size();
+        vector<vector<vector<int>>>dp(n+1, vector<vector<int>>(n+1, vector<int>(2, -1)));
+        return func(arr, 0, n, 1, 1, dp);
     }
 };
