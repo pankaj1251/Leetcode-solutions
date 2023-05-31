@@ -1,26 +1,32 @@
 class Solution {
 public:
-    int atMost(vector<int> &arr, int k){
-int n = arr.size();
-        int i=0, ans=0, unique=0;
+    int atMost(vector<int> &arr, int k)
+    {
+        int n = arr.size();
+        int i=0, j=0, ans=0;
         unordered_map<int, int>umap;
 
-        for(int j=0; j<n; j++)
+        while(j<n)
         {
-            if(umap[arr[j]]==0)unique++;
-
             umap[arr[j]]++;
 
-            while(unique>k){
-                umap[arr[i]]--;
-                if(umap[arr[i]] == 0)unique--;
-                i++;
+            if(umap.size()<=k)
+                ans += j-i+1;
+
+            else{
+                while(umap.size()>k){
+                    umap[arr[i]]--;
+                    if(umap[arr[i]]==0)umap.erase(arr[i]);
+                    i++;
+                }
+                ans +=j-i+1;
             }
-            ans += j-i+1;
+            j++;
         }
 
         return ans;
     }
+    
     int subarraysWithKDistinct(vector<int>& arr, int k) {
         return atMost(arr, k) - atMost(arr, k-1);
     }
