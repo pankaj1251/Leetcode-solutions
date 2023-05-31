@@ -1,6 +1,6 @@
 class UndergroundSystem {
 private:
-    map<pair<string, string>, int>out, count;
+    map<pair<string, string>, pair<int, int>>out;
     unordered_map<int, pair<string, int>>in;
 
 public:
@@ -13,13 +13,13 @@ public:
     
     void checkOut(int id, string stationName, int t) {
         auto it = in[id];
-        out[{it.first, stationName}] += t - it.second;
-        count[{it.first, stationName}]++;
+        out[{it.first, stationName}].first += t - it.second;
+        out[{it.first, stationName}].second++;
     }
     
     double getAverageTime(string startStation, string endStation) {
         double avg;
-        avg = (double)out[{startStation, endStation}] / count[{startStation, endStation}];
+        avg = (double) out[{startStation, endStation}].first / out[{startStation, endStation}].second;
         return avg;
     }
 };
