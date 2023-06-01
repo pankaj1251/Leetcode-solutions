@@ -5,52 +5,31 @@ public:
         if(arr[0][0] != 0 || arr[n-1][n-1]!=0)return -1;
         
         queue<pair<int, int>>Q;
-        vector<vector<int>>vis(n, vector<int>(n, 0));
+        vector<vector<int>>distance(n, vector<int>(n, 0));
+
+        vector<pair<int, int>>direction = {{0,1}, {1,0}, {0,-1}, {-1,0}, {1,1}, {-1,-1}, {1,-1}, {-1,1}};
 
         Q.push({0, 0});
         int ans=0;
-        vis[0][0] = 1;
+        distance[0][0] = 1;
+        
         while(!Q.empty()){
             
-            int xx = Q.front().first;
-            int yy = Q.front().second;
+            int x = Q.front().first;
+            int y = Q.front().second;
             Q.pop();
 
-            if(xx==n-1 and yy==n-1)return vis[xx][yy];
+            if(x==n-1 and y==n-1)return distance[x][y];
             
-            if(yy-1>=0 and xx+1<n and arr[xx+1][yy-1]==0 and vis[xx+1][yy-1]==0){
-                Q.push({xx+1, yy-1});
-                vis[xx+1][yy-1] = 1 + vis[xx][yy];    
-            }
-            if(yy+1<n and arr[xx][yy+1]==0 and vis[xx][yy+1]==0){
-                Q.push({xx, yy+1});
-                vis[xx][yy+1] = 1 + vis[xx][yy];    
-            }
-            if(yy+1<n and xx+1<n and arr[xx+1][yy+1]==0 and vis[xx+1][yy+1]==0){
-                Q.push({xx+1, yy+1});
-                vis[xx+1][yy+1] = 1 + vis[xx][yy];    
-            }
-            if(xx+1<n and arr[xx+1][yy]==0 and vis[xx+1][yy]==0){
-                Q.push({xx+1, yy});
-                vis[xx+1][yy] = 1 + vis[xx][yy];    
-            }
-            if(yy-1>=0 and arr[xx][yy-1]==0 and vis[xx][yy-1]==0){
-                Q.push({xx, yy-1});
-                vis[xx][yy-1] = 1 + vis[xx][yy];    
-            }
-            if(xx-1>=0 and yy-1>=0 and arr[xx-1][yy-1]==0 and vis[xx-1][yy-1]==0){
-                Q.push({xx-1, yy-1});
-                vis[xx-1][yy-1] = 1 + vis[xx][yy];    
-            }
-            if(xx-1>=0 and arr[xx-1][yy]==0 and vis[xx-1][yy]==0){
-                Q.push({xx-1, yy});
-                vis[xx-1][yy] = 1 + vis[xx][yy];    
-            }
-            if(xx-1>=0 and yy+1<n and arr[xx-1][yy+1]==0 and vis[xx-1][yy+1]==0){
-                Q.push({xx-1, yy+1});
-                vis[xx-1][yy+1] = 1 + vis[xx][yy];    
-            }
+            for(auto dir: direction){
+                int nx = dir.first + x;
+                int ny = dir.second + y;
 
+                if(nx>=0 and nx<n and ny>=0 and ny<n and distance[nx][ny]==0 and arr[nx][ny]==0){
+                    Q.push({nx, ny});
+                    distance[nx][ny] = 1 + distance [x][y];
+                }
+            }
         }
         return -1;
     }
