@@ -10,17 +10,13 @@ public:
         {
             umap[arr[j]]++;
 
-            if(umap.size()<=k)
-                ans += j-i+1;
-
-            else{
-                while(umap.size()>k){
-                    umap[arr[i]]--;
-                    if(umap[arr[i]]==0)umap.erase(arr[i]);
-                    i++;
-                }
-                ans +=j-i+1;
+            while(umap.size()>k){
+                umap[arr[i]]--;
+                if(umap[arr[i]]==0)umap.erase(arr[i]);
+                i++;
             }
+
+            ans +=j-i+1;
             j++;
         }
 
