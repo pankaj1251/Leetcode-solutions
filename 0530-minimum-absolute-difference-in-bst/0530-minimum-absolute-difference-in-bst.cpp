@@ -16,7 +16,7 @@ public:
 
         func(root->left, prev, diff);
 
-        if(prev >= 0) diff = min(diff, root->val-prev);
+        if(prev >= 0) diff = min(diff, abs(root->val-prev));
         prev = root->val;
 
         func(root->right, prev, diff);
