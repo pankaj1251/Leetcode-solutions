@@ -2,8 +2,6 @@ class Solution {
 public:
     void func(vector<int>& arr, int idx, set<vector<int>>&ans, vector<int>subset)
     {
-        ans.insert(subset);
-
         if(idx==arr.size()){
             ans.insert(subset);
             return;
