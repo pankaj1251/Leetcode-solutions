@@ -11,22 +11,17 @@ public:
 
 class Solution {
 public:
-    Node* flatten(Node* head) {
-        for(Node* h=head; h != NULL; h=h->next){
-            if(h->child){
-                Node* next = h->next;
-                h->next = h->child;
-                h->next->prev = h;
-                h->child=NULL;
+    //first see ITERATIVE approach.
+    Node* func(Node* head, Node* temp){
+        if(!head)return temp;
 
-                Node* ptr = h->next;
-                while(ptr->next)ptr=ptr->next;
-                ptr->next = next;
-                
-                if(next)next->prev=ptr;
-            }
-        }
+        head->next = func(head->child, func(head->next, temp));
+        if(head->next)head->next->prev = head;
 
+        head->child = NULL;
         return head;
+    }
+    Node* flatten(Node* head) {
+        return func(head, NULL);
     }
 };
