@@ -9,16 +9,40 @@
  */
 class Solution {
 public:
+    //iterative approach
+    bool find_ans(TreeNode* root, TreeNode* head,vector<TreeNode*> &ans){
+        if(root==NULL) return false;
+
+        if(root->val==head->val) {
+            ans.push_back(root);
+            return true;
+        }
+
+        ans.push_back(root);
+
+        if(find_ans(root->left,head,ans)) return true;
+        if(find_ans(root->right,head,ans))return true;
+
+        ans.pop_back();
+        return false;
+    }
+
     TreeNode* lowestCommonAncestor(TreeNode* root, TreeNode* p, TreeNode* q) {
        if(root==NULL)return root;
+       
+        vector<TreeNode*>left,right;
 
-       if(root->val==p->val || root->val == q->val)return root;
+        find_ans(root, p, left);
+        find_ans(root, q, right);
 
-       TreeNode* left = lowestCommonAncestor(root->left, p, q);
-       TreeNode* right = lowestCommonAncestor(root->right, p, q);
-
-        if(left and right)return root;
-
-        return left==NULL ? right: left;
+        int i=0, j=0, n=left.size(), m = right.size();
+        // for(auto it: left)cout<<it->val<<" ";
+        // cout<<endl;
+        // for(auto it: right)cout<<it->val<<" ";
+        while(i<n and j<m and left[i]==right[j]){
+            i++;j++;
+        }
+        if(i==0)return NULL;
+        return left[i-1];
     }
 };
