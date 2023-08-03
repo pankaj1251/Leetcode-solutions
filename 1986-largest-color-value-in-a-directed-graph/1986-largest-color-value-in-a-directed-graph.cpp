@@ -1,57 +1,47 @@
 class Solution {
 public:
-    unordered_map<int, unordered_map<char, int>>dp;
-    int ans=0;
-    pair<unordered_map<char, int>, bool> dfs(vector<vector<int>> &adj, int i, vector<int> &vis, vector<int> &pathVis, string &colors){
 
-        vis[i]=1;
-        pathVis[i]=1;
-        unordered_map<char, int>umap;
-
-        for(auto &it: adj[i]){
-            if(!vis[it]){
-                auto temp = dfs(adj, it, vis, pathVis, colors);
-
-                if(temp.second)return {umap, true};
-
-                for(auto xx: temp.first){
-                    umap[xx.first] = max(umap[xx.first], xx.second);
-                }
-            }
-            else {
-                if(pathVis[it])return {umap, true};
-                for(auto xx: dp[it]){
-                    umap[xx.first] = max(umap[xx.first], xx.second);
-                }
-            }
-
-        }
-
-        pathVis[i]=0;
-        umap[colors[i]]++;
-        dp[i]=umap;
-
-        return {umap, false};
-    }
     int largestPathValue(string colors, vector<vector<int>>& arr) {
         int n = colors.size();
         vector<vector<int>>adj(n);
-
+        vector<int>indegree(n, 0);
         for(auto it: arr){
             adj[it[0]].push_back(it[1]);
+            indegree[it[1]]++;
         }
 
-        vector<int>vis(n, 0), pathVis(n, 0);
+        vector<int>vis(n, 0);
+        vector<vector<int>> counts(n, vector<int>(26, 0)); //to count max no of all colors from source to that point.
+
+        queue<int>Q;
         for(int i=0; i<n; i++){
-            if(!vis[i]){
-                auto temp = dfs(adj, i, vis, pathVis, colors);
-                if(temp.second)return -1;
-                
-                for(auto xx: temp.first){
-                    ans = max(ans, xx.second);
-                }
-            }
+            if(indegree[i]==0)Q.push(i);
         }
-        return ans;
+
+        for(int i=0; i<n; i++){
+            counts[i][colors[i]-'a']++; //for color of every node of '"colors"'.
+        }
+
+        int ans=0;
+        int visited = 0;
+
+        while(!Q.empty()){
+            int node = Q.front();
+            Q.pop();
+            visited++;
+
+            for(auto it: adj[node]){
+                for(int i=0; i<26; i++){
+                    counts[it][i] = max(counts[it][i], counts[node][i] + (colors[it]-'a'==i?1:0));
+                }
+                indegree[it]--;
+
+                if(indegree[it]==0)Q.push(it);
+            }
+
+            ans = max(ans, *max_element(counts[node].begin(), counts[node].end()));
+        }
+
+        return visited==n? ans : -1; //if visited != n then there is cycle is present. 
     }
 };
