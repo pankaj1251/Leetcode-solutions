@@ -1,27 +1,23 @@
 class Solution {
 public:
     int mod = 1e9+7;
+    int func(int goal_idx, int song_idx, int n, int goal, int k, vector<vector<int>> &dp){
+        if(song_idx>n || goal_idx>goal)return 0;
+        if(song_idx==n and goal_idx==goal)return 1;
 
-    int func(int song_idx, int goal_idx, int n, int goal, int k, vector<vector<int>> &dp){
+        if(dp[song_idx][goal_idx] != -1) return dp[song_idx][goal_idx];
 
-        if(song_idx==0 and goal_idx==0) return 1;
+        long long ans = (long long) func(goal_idx+1, song_idx+1, n, goal, k, dp)*(n-song_idx)%mod;
         
-        if(song_idx==0 || goal_idx==0)return 0;
-
-        if(dp[song_idx][goal_idx] != -1)return  dp[song_idx][goal_idx];
-
-        long long ans = (long long) func(song_idx - 1, goal_idx - 1, n, goal, k, dp) * (n - song_idx + 1) %mod; //NEW SONG
-
-        if(song_idx > k){ //reapeat only if the no. of songs left to complete playlist > no. unique of songs left to add to playlist
-            ans +=  (long long) func(song_idx, goal_idx - 1, n, goal, k, dp) * (song_idx - k)%mod; //OLD SONG
+        if(song_idx > k){
+            ans += (long long) func(goal_idx+1, song_idx, n, goal, k, dp)*(song_idx-k)%mod;
         }
 
         return dp[song_idx][goal_idx] = ans%mod;
-
     }
-
     int numMusicPlaylists(int n, int goal, int k) {
         vector<vector<int>>dp(n+1, vector<int>(goal+1, -1));
-        return func(n, goal, n, goal, k, dp);
+
+        return func(0, 0, n, goal, k, dp)%mod;
     }
 };
