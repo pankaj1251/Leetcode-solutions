@@ -10,10 +10,10 @@ public:
 
         if(dp[song_idx][goal_idx] != -1)return  dp[song_idx][goal_idx];
 
-        long long ans = (long long) func(song_idx - 1, goal_idx - 1, n, goal, k, dp) * (n - song_idx + 1) %mod;
+        long long ans = (long long) func(song_idx - 1, goal_idx - 1, n, goal, k, dp) * (n - song_idx + 1) %mod; //NEW SONG
 
-        if(song_idx > k){
-            ans +=  (long long) func(song_idx, goal_idx - 1, n, goal, k, dp) * (song_idx - k)%mod;
+        if(song_idx > k){ //reapeat only if the no. of songs left to complete playlist > no. unique of songs left to add to playlist
+            ans +=  (long long) func(song_idx, goal_idx - 1, n, goal, k, dp) * (song_idx - k)%mod; //OLD SONG
         }
 
         return dp[song_idx][goal_idx] = ans%mod;
