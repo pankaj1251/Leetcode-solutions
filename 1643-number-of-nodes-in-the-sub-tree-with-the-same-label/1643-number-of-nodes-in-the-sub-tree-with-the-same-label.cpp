@@ -3,6 +3,8 @@ public:
     vector<int>dfs(int prev, int node, vector<vector<int>> &adj, string &str, vector<int> &ans)
     {
         vector<int>temp(26);
+        // init the current label
+        temp[str[node]-'a']=1;
 
         for(auto &it: adj[node])
         {
@@ -16,7 +18,7 @@ public:
             }
         }
 
-        ans[node] = ++temp[str[node]-'a'];
+        ans[node] = temp[str[node]-'a'];
         return temp;
     }
 
