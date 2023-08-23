@@ -1,9 +1,11 @@
 class Solution {
 public:
+
     static bool comparator(pair<vector<int>, char>&a, pair<vector<int>, char>&b){
         if(a.first==b.first)return a.second<b.second;
         return a.first>b.first;
     }
+
     string rankTeams(vector<string>& votes) {
         int n = votes.size();
         int sz = votes[0].size();
@@ -13,6 +15,13 @@ public:
                 umap[voter[i]-'A'][i]++;
             }
         }
+
+        // for(int i=0; i<26; i++){
+        //     for(int j=0; j<umap[i].size(); j++){
+        //         cout<<umap[i][j]<<" ";
+        //     }
+        //     cout<<endl;
+        // }
 
         vector<pair<vector<int>, char>> table(26);
 
