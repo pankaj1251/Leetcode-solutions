@@ -22,7 +22,8 @@ public:
             string str=arr[i];
             int len=str.size();
 
-            //case I: str is empty.
+            //case I: if str contain only one char then find empty string in map to concatenate.
+            //as arr does not contain duplicates, our only option is to find empty strings. 
             if(len==1){
                 if(umap.count("") and umap[""] != i){
                     ans.push_back({i, umap[""]});
