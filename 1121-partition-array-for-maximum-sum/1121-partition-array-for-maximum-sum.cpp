@@ -4,12 +4,10 @@ public:
         if(idx>=arr.size())return 0;
         if(dp[idx] != -1)return dp[idx];
 
-        int ans=INT_MIN;
+        int ans=INT_MIN, maxm=arr[idx];
         for(int i=idx; i<k+idx and i<arr.size();i++)
         {
-            int maxm=INT_MIN;
-            for(int j=idx; j<i+1; j++)
-                maxm=max(maxm, arr[j]);
+            maxm=max(maxm, arr[i]);
             
             int temp = (i-idx+1)*maxm;
             ans = max(ans, temp + func(arr, i+1, k, dp));
