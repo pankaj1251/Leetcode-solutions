@@ -1,36 +1,56 @@
-class Solution {
+class Disjoint{
 public:
-    void dfs(vector<vector<int>>& adj, vector<int>&vis, int node){
-        vis[node] = true;
+    vector<int>rank, size, parent;
 
-        for(auto it: adj[node]){
-            if(!vis[it]){
-                vis[it]=true;
-                dfs(adj, vis, it);
-            }
+    Disjoint(int n){
+        rank.resize(n+1);
+        parent.resize(n+1);
+        size.resize(n+1, 1);
+
+        for(int i=0; i<=n; i++)parent[i]=i;
+    }
+
+    int find_Upar(int node){
+        if(node==parent[node])return node;
+        return parent[node] = find_Upar(parent[node]);
+    }
+
+    void UnionByRank(int u ,int v){
+        int Upar_u = find_Upar(u);
+        int Upar_v = find_Upar(v);
+
+        if(Upar_u==Upar_v)return;
+
+        if(rank[Upar_u] < rank[Upar_v]){
+            parent[Upar_u] = Upar_v;
+        }
+        else if(rank[Upar_v]<rank[Upar_u]){
+            parent[Upar_v] = Upar_u;
+        }
+        else{
+            parent[Upar_v] = Upar_u;
         }
     }
+};
+class Solution {
+public:
+    
 
     int findCircleNum(vector<vector<int>>& arr) {
         int n = arr.size();
-        vector<vector<int>>adj(n, vector<int>());
 
+        Disjoint ds(n);
+        
         for(int i=0; i<n; i++){
             for(int j=0; j<n; j++){
-                if(i!=j and arr[i][j]==1){
-                    adj[i].push_back(j);
+                if(arr[i][j]==1){
+                    ds.UnionByRank(i, j);
                 }
             }
         }
-
-        vector<int>vis(n, false); 
         int ans=0;
-
         for(int i=0; i<n; i++){
-            if(!vis[i]){
-                dfs(adj, vis, i);
-                ans++;
-            }    
+            if(ds.parent[i]==i)ans++;
         }
 
         return ans;
