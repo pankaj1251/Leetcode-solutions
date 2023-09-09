@@ -1,29 +1,31 @@
 class Solution {
 public:
-    void func(vector<int>& arr, int i, int target, int prev, vector<int>path, set<vector<int>>&ans){
+    void func(vector<int>& arr, int idx, int target, vector<int>path, vector<vector<int>>&ans){
         if(target==0){
-            ans.insert(path);
+            ans.push_back(path);
             return;
         }
 
-        if(target<0 || i>=arr.size())return; 
+        if(target<0 || idx>=arr.size())return; 
 
-        func(arr, i+1, target, target, path, ans);
-        if(i>0 and arr[i-1]==arr[i] and prev==target)return;
-        path.push_back(arr[i]);
-        func(arr, i+1, target-arr[i], target, path, ans);
-        path.pop_back();
+        for(int i=idx; i<arr.size(); i++){
+            if(i>idx and arr[i-1]==arr[i])continue;
+
+            path.push_back(arr[i]);
+            func(arr, i+1, target-arr[i], path, ans);
+            path.pop_back();
+        }
     }
 
-    vector<vector<int>> combinationSum2(vector<int>& arr, int target) {
-        vector<vector<int>>ans;
+    vector<vector<int>> combinationSum2(vector<int>& arr, int target) 
+    {
         int n = arr.size();
-        set<vector<int>>res;
         vector<int>path;
-        sort(arr.begin(), arr.end());
-        func(arr, 0, target, target, path, res);
+        vector<vector<int>>ans;
 
-        for(auto &it: res)ans.push_back(it);
+        sort(arr.begin(), arr.end());
+
+        func(arr, 0, target, path, ans);
 
         return ans;
     }
