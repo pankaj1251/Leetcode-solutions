@@ -2,7 +2,7 @@ class Solution {
 public:
     bool func(string &s, int idx, set<string>&st, vector<int>&dp){
         if(idx==s.length())return true;
-        if(dp[idx] != -1)return false;
+        if(dp[idx] != -1)return dp[idx];
 
         for(int i=idx; i<s.length(); i++){
             string temp = s.substr(idx, i-idx+1);
