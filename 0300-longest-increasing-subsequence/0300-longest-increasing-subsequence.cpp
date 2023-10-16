@@ -1,40 +1,22 @@
 class Solution {
 public:
-    //print LIS.
-    int lengthOfLIS(vector<int>& arr) 
-    {
+    // TC: O(nlog(n))  Binary Search Approach
+    int lengthOfLIS(vector<int>& arr) {
         int n = arr.size();
-        vector<int>dp(n, 1), hash(n, 0);
-        int maxm = 1, lastIndex=0;
+        vector<int>temp;
+        int max_len=1;
+        temp.push_back(arr[0]);
 
-        for(int i=0; i<n; i++)
-        {
-            hash[i]=i;
-            for(int prev=0; prev<i; prev++)
-            {
-                if(arr[prev]<arr[i] and 1+dp[prev]>dp[i]){
-                    dp[i]=1+dp[prev];
-                    hash[i]=prev;
-                }
+        for(int i=1; i<n; i++){
+            if(arr[i]>temp.back()){
+                temp.push_back(arr[i]);
+                max_len++;
             }
-            if(dp[i]>maxm){
-                maxm=dp[i];
-                lastIndex=i;
+            else{
+                int idx = lower_bound(temp.begin(), temp.end(), arr[i])-temp.begin();
+                temp[idx]=arr[i];
             }
         }
-
-        vector<int> lis(maxm);
-        lis[0] = arr[lastIndex];
-        int idx=1;
-        while(hash[lastIndex] != lastIndex){
-            lastIndex=hash[lastIndex];
-            lis[idx++] = arr[lastIndex];
-        }
-
-        reverse(lis.begin(), lis.end());
-        for(auto &it: lis)cout<<it<<" ";
-        cout<<"\n";
-
-        return maxm;
+        return max_len;
     }
 };
